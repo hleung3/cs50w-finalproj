@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+<!-- 	<script src="{% static 'js/index.js' %}"></script> -->
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Welcome to the lobby area for the Game:  <strong style="color:red">{{room}}</strong></h1>
+  <div>Here you can compare your ranks, portfolio values and go see your and other portfolio holdings.</div>
+  <br>
+  
+  <a class="btn btn-success" href="{%url 'game-portfolio' room=room user=user.username %}"> Your Portfolio</a>
+
+  <table class="table">
+      <th scope="col">Rank</th>
+      <th>Admin?</th>
+      <th scope="col">Name</th>
+      <th>Date Joined</th>
+      <th> Total Asset Value</th>
+      <th>Cash</th>
+      <th>Stock Value</th>
+      <th>See Portfolio</th>
+      <tbody>
+        {% for member in members %}
+          <tr>
+            <td>{{ member.rank }}</td>
+            <td>
+              {% if member.creator %}
+                &#10003; Admin
+              {% endif %}
+            </td>
+            <td>{{ member.user.username }}</td>
+            <td>{{ member.date_join }}</td>
+            <td>{{ member.total_asset_value }}</td>
+            <td>{{ member.cash_remaining }}</td>
+            <td>{{ member.stock_value }}</td>
+            {% if member.user.id != request.user.id %}            
+              <td><a class="btn btn-success" href="{%url 'game-portfolio' room=room user=member.user.username %}"> View Portfolio</a> </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+
+{% endblock %}

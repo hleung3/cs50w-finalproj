@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+  {% load mathfilters %}
+<!-- 	<script src="{% static 'js/index.js' %}"></script> -->
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Transaction page for {{user}}:  <strong style="color:red">{{room}}</strong></h1>
+  <h2>Transaction was a 
+  	{% if tr_success %}
+  		Success!!!
+  	{% else %}
+  		Fail. Please go back and try again
+  	{% endif %}
+   111</h2>
+  <a class="btn btn-secondary" href="{%url 'game-portfolio' room=room user=user %}"> &lt&lt&lt GO BACK</a>
+
+{% endblock %}

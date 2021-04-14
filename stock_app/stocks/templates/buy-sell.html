@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+  {% load mathfilters %}
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Opening a transaction for: <strong id="user" data-value="{{ user }}">{{user}}</strong> in  <strong id="room" style="color:red" data-value="{{ room }}">{{room}}</strong></h1>
+  
+  <div>Buy/Sell Page</div>
+  <a class="btn btn-secondary" href="{%url 'game-portfolio' room=room user=user.username %}"> &lt&lt&lt GO BACK</a>
+  {% if error %}
+    <div>{{ error }}</div>
+  {% else %}
+    <tr>
+      <td><strong>TOTAL:</strong> {{member.total_asset_value}}</td>
+      <td><strong>CASH:</strong> {{member.cash_remaining}}</td>
+      <td><strong>STOCKS:</strong> {{member.stock_value}}</td>
+    </tr>
+    <div>Confirm Transaction Details Below</div>
+    <div>Open Order: <strong>{{transaction | title}}</strong>  a Stock. </div>
+    <form id="stock-form" class="col-lg-4 border" action="{% url 'transaction' %}" method="POST">
+      {% csrf_token %}
+    	{% if request.GET.ticker %}
+      <label>Ticker: <strong>{{ request.GET.ticker| upper }}</strong></label><br>
+      <input name="ticker" value="{{ request.GET.ticker| upper }}" type="hidden">
+      {% endif %}
+      <input name="room" value="{{ room }}" type="hidden">
+      <input name="user" value="{{ user }}" type="hidden">
+      <label>Current Price: {{ price }}</label><br>
+      <input name="price" value="{{ price }}" type="hidden">
+    	
+      <label>Quantity:</label>
+      {% if transaction == "sell" %}
+    	  <input type="number" name="quantity" value="{{request.GET.quantity}}"  min="1" max="{{request.GET.quantity}}">
+      {% else %}
+        <input type="number" name="quantity" value="1"  min="1" max="{{ max }}">
+      {% endif %}
+      <input type="hidden" name="transaction" value="{{ transaction }}">
+            
+      <button id="form-button" class="btn btn-primary" type="submit">{{ transaction| title}}</button>
+    </form>
+  {% endif %}
+
+{% endblock %}

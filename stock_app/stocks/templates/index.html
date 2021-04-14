@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+	<script src="{% static 'js/index.js' %}"></script>
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Stocky: Home</h1>
+  <p>Welcome to Stocky, a website developed by <em>Harry Leung</em>!</p>
+  <div>You can lookup and track stock prices or join games to compete with other players!! Good Luck!!</div>
+
+  <div class="row">
+  	<div id="stock-form" class="col border">
+  		<form id="ticker-form" method="POST">
+	  		{% csrf_token %} 
+	  		<label><b>Enter a Ticker:</b></label>
+	  		<input type="Text" name="ticker" id="ticker-input" value="" placeholder="e.g. AAPL" >
+	  		<button id="btn-get-quote" class="btn btn-primary" type="submit">
+	  			Get Quote
+	  		</button>
+  		</form>  	
+  	</div>
+  	<div id="stock-info" class="col border">
+  		<h1 id="msg"></h1>
+  		<ul class="list-group" id="info-list">
+  			
+  		</ul>
+  		<button id="add-portfolio" class="btn btn-success">Add to Portfolio</button>
+  	</div>
+
+  </div>
+  <div> Your Games: </div>
+  {% if user.is_authenticated %}
+    <table class="table">
+      <th scope="col">Name</th>
+      <th scope="col">Admin?</th>
+      <th>Date Created</th>
+      <th> Total Users</th>
+      <th>  Total Asset Value</th>
+      <th scope="col">Go To</th>
+      <tbody>
+        {% for room in rooms %}
+          <tr>
+            <td>{{ room.name }}</td>
+            <td>
+              {% for admin in admins %}
+                {% if admin.room == room %}
+                  {{ admin.user.username }}
+                {% else %}
+                {% endif %}
+              {% endfor %}
+            </td>
+            <td>{{ room.create_date }}</td>
+            <td> {{ room.numUsers }} </td>
+            <td>
+              {% for member in memberships %}
+                {% if member.room.name == room.name %}
+                  {{ member.total_asset_value }}
+                {% endif %}
+              {% endfor%}
+            </td>
+            <td>
+              <a class="btn btn-primary" href="{% url 'game-lobby' room=room.name %}">Go to Page</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+      <div> log in to see your games </div>
+  {% endif %}
+{% endblock %}

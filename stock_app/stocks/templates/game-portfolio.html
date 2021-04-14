@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+  {% load mathfilters %}
+<!-- 	<script src="{% static 'js/index.js' %}"></script> -->
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Game portfolio for {{user}}:  <strong style="color:red">{{room}}</strong></h1>
+  
+  <a class="btn btn-success" href="{%url 'game-lobby' room=room %}"> &lt&lt&lt back to lobby </a>
+  <tr>
+    <td><strong>TOTAL:</strong> {{totals.total_asset_value}}</td>
+    <td><strong>CASH:</strong> {{totals.cash_remaining}}</td>
+    <td><strong>STOCKS:</strong> {{totals.stock_value}}</td>
+  </tr>
+  {% if user.id == request.user.id %}
+    <form action="{% url 'buy-sell' room=room user=user bs='buy' %}" method="GET">
+      <label>Enter Stock Ticker:</label>
+      <input type="text" name="ticker" required>
+      <button class="btn btn-warning" type="submit">Buy Stock</button>
+    </form>
+  {% endif %}
+  <table class="table">
+      <th scope="col">Stock Ticker</th>
+      <th scope="col">Quantity</th>
+      <th>Date Purchased</th>
+      <th>Purchase Price</th>
+      <th>Current Price</th>
+      <th>Total Value</th>
+      <th>Buy/Sell</th>
+      <tbody>
+        {% for item in transactions %}
+          <tr>
+            <td scope="row">{{item.ticker}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.price }}</td>
+            {% for key,value in price_dict.items %}
+                {% if key == item.ticker %}
+                  <td>{{ value }}</td>
+                  <td>{{ item.quantity|mul:value|floatformat:"2" }}</td>
+                {% endif %}
+            {% endfor %}
+            {% if user.id == request.user.id %}
+              <td>
+                <a class="btn btn-primary" href="{% url 'buy-sell' room=room user=user bs='buy' %}?ticker={{item.ticker}}">Buy More</a>   
+                
+                <a class="btn btn-primary" href="{% url 'buy-sell' room=room user=user bs='sell' %}?ticker={{item.ticker}}&quantity={{item.quantity}}">Sell</a>
+              </td>
+            {% else %}
+              <td> <strong style="color:red">NOT PORTFOLIO OWNER </strong></td>
+            {% endif %}
+          </tr>
+        {% empty %}
+          <div> no transactions yet. </div>
+        {% endfor %}         
+      </tbody>
+  </table>
+
+{% endblock %}

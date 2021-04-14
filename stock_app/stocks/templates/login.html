@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Log in to Stock app</title>
+{% endblock %}
+
+
+{% block content %}
+  <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="exampleInputUsername">Username</label>
+      <input type="text" class="form-control" id="exampleInputUsername" name="username" placeholder="Enter your username">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Log in</button>
+  </form>
+{% endblock %}

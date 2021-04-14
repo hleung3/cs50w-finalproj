@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+	<script src="{% static 'js/create_game.js' %}"></script>
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Stocky: Create a New Game</h1>
+  <div>Create a new game a become the admin. Define the games rules and restrictions.</div>
+  <br>
+
+  <div class="row">
+    <div class="col border">
+      <form id="game-form" method="POST">
+        <label><b>Enter a Name</b></label>
+        <input type="Text" name="room-name" id="name-input" value="">
+        <label><b>Number of Players</b></label>
+        <input type="Number" name="room-players" id="players-input" value="">
+        <label><b>Starting Asset Value</b></label>
+        <input type="Number" name="room-value" id="players-input" value="">
+        <button id="btn-make-room" class="btn btn-primary" type="submit">
+          Create Game
+        </button>
+      </form>   
+    </div>
+    <h5 id="msg"></h1>
+  </div>
+{% endblock %}

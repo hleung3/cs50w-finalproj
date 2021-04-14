@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+	{% load mathfilters %}
+  	<script src="{% static 'js/join-game.js' %}"></script>
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Stocky: Join Games</h1>
+  <div>View all rooms and request to join</div>
+
+  <div class="row">
+  	<!-- list all games in database -->
+  	<!-- each row needs a button to join -->
+  	<!--  -->
+    <h1 id="msg"></h1>
+  	<table class="table">
+  		<th>Name</th>
+      <th>Date created</th>
+      <th>Number of users</th>
+  		<th>Admin</th>
+      <th>Starting Value</th>
+      <th>Openings Remaining</th>
+  		<th>Join</th>
+  		<tbody>
+  			{% for room in rooms %}
+  			<tr id="{{ room.name }}">
+  				<td> {{ room.name }} </td>
+  				<td> {{ room.create_date }} </td>
+  				<td> {{ room.numUsers }} </td>
+  				<td> 
+					{% for admin in admins %}
+						{% if admin.room.name == room.name %}
+							{{ admin.user }}
+						{% endif %}
+					{% endfor %}  					
+  				 </td>
+  				<td> {{ room.starting_value }} </td>
+  				<td class="openings"> {{ room.max_users|sub:room.numUsers }}</td>
+  				<td><button class="btn btn-success join-game" data-room="{{room.name}}">Join</button></td>
+  				<td><a id="goto-{{room.name}}" class="btn btn-success go-to-page disabled" href="{% url 'game-lobby' room=room.name %}">Go To Game</a></td>
+  			</tr>
+  			{% endfor %}
+  		</tbody>
+  	</table>
+  </div>
+{% endblock %}

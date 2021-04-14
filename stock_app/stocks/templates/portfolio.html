@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block imports %}
+	{% load static %}
+	<script src="{% static 'js/portfolio.js' %}"></script>
+	
+{% endblock %}
+
+
+{% block content %}
+  <h1>Stocky: Saved Stocks</h1>
+  <div>see all your favourite stocks and track them from day one!</div>
+  <br>
+  <div class="row">
+  	<button type="button" class="btn btn-danger" id="removeAll" onClick="remove_all(this,{{ user.id}})">Remove Selected</button>
+
+  	<table class="table">
+  		<th>
+  			<div class="custom-control custom-checkbox">
+			  <input type="checkbox" class="custom-control-input" id="checkAll" onClick="toggle(this)">
+			  <label class="custom-control-label" for="checkAll">Select All</label>
+			</div>  			
+  		</th>
+  		<th scope="col">#</th>
+	    <th scope="col">Ticker</th>
+	    <th scope="col">Date Added</th>
+	    <th scope="col">Saved Price</th>
+	    <th scope="col">Current Price</th>
+	    <th scope="col">Percent Change (+/-)</th>
+	    <th scope="col">Remove</th>
+        <tbody>
+    		{% for stock in stocks %}
+    			<tr class="stock-item" id="{{ stock.ticker }}">
+
+	        		<td>
+					  		<input type="checkbox" class="" name="stock" >
+					  		<label >Select</label>
+        			</td>
+        			<td scope="row">{{ forloop.counter }}</td>
+        			<td scope="row">{{ stock.ticker }}</td>
+        			<td scope="row">{{ stock.date_added }}</td>
+        			<td scope="row">{{ stock.initial_price }}</td>
+        			{% if stock.ticker in prices.keys %}
+        				<td scope="row">{{ prices|get_item:stock.ticker }}</td>
+        			{% else %}
+        				<td> no price</td>
+        			{% endif%}
+        			<td scope="row"> {{ percent|get_item:stock.ticker }} %</td>
+	        		<td class="text-center">
+	                  <button type="button" name="button" class="btn btn-danger remove-item" data-userid ="{{user.id}}" data-ticker="{{stock.ticker}}">
+	                    Remove
+	                  </button>
+	                </td>
+    			</tr>
+    		{% endfor %}
+
+        </tbody>
+  	</table>
+  </div>
+{% endblock %}
